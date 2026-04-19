@@ -1,25 +1,141 @@
 # Microservices-Based Twitter Clone
 
-## Tech Stack
-- Backend: Java, Spring Boot (Microservices)
-- Frontend: Angular, Bootstrap
-- Authentication: JWT
-- API Gateway: Implemented
-- Database: MySQL
+A scalable full stack Twitter-like application built using **Spring Boot microservices architecture**, **Angular frontend**, **JWT authentication**, and an **API Gateway**.
 
-## Features
-- User authentication and authorization (JWT)
-- Tweet posting and feed generation
-- Microservice architecture
-- API Gateway for routing requests
+---
 
-## Architecture
-- User Service
-- Tweet Service
-- Feed Service
+## 🚀 Tech Stack
+
+### Backend
+- Java
+- Spring Boot
+- Spring Data JPA
+- Microservices Architecture
+- REST APIs
+
+### Frontend
+- Angular
+- TypeScript
+- HTML, CSS, Bootstrap
+
+### Security & Architecture
+- JWT Authentication
 - API Gateway
 
-## How to Run
-1. Clone the repo
-2. Run backend services
-3. Start Angular frontend
+### Database
+- MySQL
+
+### Tools
+- Git
+- Maven
+- Jenkins (CI/CD)
+
+---
+
+## 🧠 System Architecture
+
+The application is designed using a **microservices architecture**, where each service is independently deployable and responsible for a specific functionality.
+
+### Services:
+- **user-service** → Handles user data and authentication
+- **tweet-service** → Manages tweet creation and retrieval
+- **followers-service** → Handles follow/unfollow functionality
+- **search-service** → Enables searching users/tweets
+- **media-service** → Handles media uploads
+- **api-gateway** → Central entry point for all client requests
+
+---
+
+## 🔄 Request Flow (Example: Create Tweet)
+
+1. User sends request from Angular frontend  
+2. Request goes to **API Gateway**  
+3. Gateway validates and routes request to **tweet-service**  
+4. **JWT token is verified** for authentication  
+5. Tweet is processed and stored in database  
+6. Response is returned via gateway to frontend  
+
+---
+
+## 🔐 Authentication
+
+- Implemented using **JWT (JSON Web Tokens)**
+- Stateless authentication mechanism
+- Token is validated on each request
+- Ensures secure communication between client and services
+
+---
+
+## ⚙️ Why Microservices?
+
+- Independent deployment of services  
+- Better scalability (each service scales independently)  
+- Fault isolation (failure in one service doesn’t break entire system)  
+- Improved maintainability and modularity  
+
+---
+
+## 📂 Project Structure
+twitter-clone-microservices/
+│
+├── backend/
+│ ├── user-service/
+│ ├── tweet-service/
+│ ├── followers-service/
+│ ├── search-service/
+│ ├── media-service/
+│ └── api-gateway/
+│
+├── frontend/
+│ └── Angular application
+│
+├── README.md
+└── .gitignore
+
+---
+
+## ▶️ How to Run
+
+### Backend
+1. Navigate to each service folder inside `backend/`
+2. Run using:
+   mvn spring-boot:run
+
+### Frontend
+1. Navigate to `frontend/`
+2. Install dependencies:
+   npm install
+3. Start Angular app:
+   ng serve
+4. Open browser:
+   http://localhost:4200
+
+
+---
+
+## 📌 Features
+
+- User authentication and authorization (JWT)
+- Tweet creation and feed system
+- Follow/unfollow users
+- Search functionality
+- Media handling support
+- API Gateway routing
+- Microservices-based architecture
+
+---
+
+## 🚀 Future Improvements
+
+- Add Docker containerization
+- Implement service discovery (Eureka)
+- Add centralized logging and monitoring
+- Improve caching (Redis)
+- Rate limiting at API Gateway
+
+---
+
+## 👨‍💻 Author
+
+**Vedant Kumar**  
+GitHub: https://github.com/VK-777
