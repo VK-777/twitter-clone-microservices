@@ -96,6 +96,20 @@ twitter-clone-microservices/
 ```
 ---
 
+## 🗄️ Database Setup
+
+Before running the application, ensure the required database tables are created.
+
+- Database used: **MySQL**
+- SQL scripts for table creation are available in respective service folders
+
+### Steps:
+1. Create a MySQL database
+2. Run the provided SQL scripts for each service
+3. Ensure database connection properties are correctly configured in application files
+
+---
+
 ## ▶️ How to Run
 
 ### Backend
