@@ -4,6 +4,11 @@ A scalable full stack Twitter-like application built using **Spring Boot microse
 
 ---
 
+## 🚀 Key Highlights
+- Implemented JWT-based authentication for secure APIs  
+- Designed API Gateway for centralized routing  
+- Built scalable microservices architecture
+
 ## 🚀 Tech Stack
 
 ### Backend
