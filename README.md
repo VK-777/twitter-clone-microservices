@@ -101,17 +101,18 @@ twitter-clone-microservices/
 ### Backend
 1. Navigate to each service folder inside `backend/`
 2. Run using:
+   ```bash
    mvn spring-boot:run
-
+   
 ### Frontend
 1. Navigate to `frontend/`
 2. Install dependencies:
    npm install
 3. Start Angular app:
+   ```bash
    ng serve
-4. Open browser:
+5. Open browser:
    http://localhost:4200
-
 
 ---
 
