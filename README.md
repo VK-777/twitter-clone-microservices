@@ -9,7 +9,9 @@ A scalable full stack Twitter-like application built using **Spring Boot microse
 - Designed API Gateway for centralized routing  
 - Built scalable microservices architecture
 
-## 🚀 Tech Stack
+---
+
+## 🖥️ Tech Stack
 
 ### Backend
 - Java
