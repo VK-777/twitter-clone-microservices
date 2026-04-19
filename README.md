@@ -76,22 +76,24 @@ The application is designed using a **microservices architecture**, where each s
 ---
 
 ## 📂 Project Structure
+
+```bash
 twitter-clone-microservices/
 │
 ├── backend/
-│ ├── user-service/
-│ ├── tweet-service/
-│ ├── followers-service/
-│ ├── search-service/
-│ ├── media-service/
-│ └── api-gateway/
+│   ├── user-service/
+│   ├── tweet-service/
+│   ├── followers-service/
+│   ├── search-service/
+│   ├── media-service/
+│   └── api-gateway/
 │
 ├── frontend/
-│ └── Angular application
+│   └── Angular application
 │
 ├── README.md
 └── .gitignore
-
+```
 ---
 
 ## ▶️ How to Run
