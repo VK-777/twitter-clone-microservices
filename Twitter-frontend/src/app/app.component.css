@@ -1,0 +1,15 @@
+.layout{
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+
+.sidebar{
+    width: 25%;
+    padding: 10px;
+}
+
+.feed{
+    width: 75%;
+    padding: 10px
+}

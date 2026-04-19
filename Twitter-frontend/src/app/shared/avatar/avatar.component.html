@@ -1,0 +1,6 @@
+<div class="avatar"
+     [ngClass]="'avatar-' + size"
+     [style.background]="bgGradient">
+  <img *ngIf="src" [src]="src" [alt]="initials" class="avatar-img"/>
+  <span *ngIf="!src">{{ initials }}</span>
+</div>

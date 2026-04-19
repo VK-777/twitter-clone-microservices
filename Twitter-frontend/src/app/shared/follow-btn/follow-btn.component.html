@@ -1,0 +1,12 @@
+<button
+  class="btn fw-bold rounded-pill px-3 py-1"
+  [ngClass]="isFollowing ? 'btn-following' : 'btn-follow'"
+  (click)="toggle($event)"
+  [disabled]="isLoading"
+  style="font-size:13px; min-width:90px;">
+  <span class="spinner-border spinner-border-sm me-1"
+        *ngIf="isLoading"></span>
+  <span *ngIf="!isLoading">
+    {{ isFollowing ? 'Following' : 'Follow' }}
+  </span>
+</button>

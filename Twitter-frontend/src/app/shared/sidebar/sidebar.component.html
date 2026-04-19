@@ -1,0 +1,78 @@
+<nav class="sidebar d-flex flex-column h-100 py-3 px-2">
+  
+    <!-- Logo -->
+
+  <a routerLink="/timeline" class="sidebar-logo mb-3 px-2 text-decoration-none">
+    <i class="bi bi-twitter-x" style="font-size:24px; color:#1d9bf0;"></i>
+    <span class="sidebar-text ms-2 fw-bold"
+          style="font-size:20px; color:#1d9bf0;">Twitter</span>
+  </a>
+
+  <!-- Nav Links -->
+
+  <a routerLink="/timeline" routerLinkActive="active"
+     class="nav-item px-3 py-2 mb-1 text-decoration-none rounded-3">
+    <i class="bi bi-house-door-fill"></i>
+    <span class="sidebar-text ms-3">Home</span>
+  </a>
+
+  <a routerLink="/search" routerLinkActive="active"
+     class="nav-item px-3 py-2 mb-1 text-decoration-none rounded-3">
+    <i class="bi bi-search"></i>
+    <span class="sidebar-text ms-3">Explore</span>
+  </a>
+
+  <a routerLink="/followers" routerLinkActive="active"
+     class="nav-item px-3 py-2 mb-1 text-decoration-none rounded-3">
+    <i class="bi bi-people"></i>
+    <span class="sidebar-text ms-3">Followers</span>
+  </a>
+
+  <a routerLink="/profile" routerLinkActive="active"
+     class="nav-item px-3 py-2 mb-1 text-decoration-none rounded-3">
+    <i class="bi bi-person"></i>
+    <span class="sidebar-text ms-3">Profile</span>
+  </a>
+
+  <!-- Tweet Button -->
+
+  <button class="tweet-btn btn text-white fw-bold mt-2 rounded-pill"
+          (click)="onTweet()">
+    <i class="bi bi-feather me-2"></i>
+    <span class="sidebar-text">Tweet</span>
+  </button>
+
+  <!-- Spacer -->
+
+  <div class="flex-grow-1"></div>
+
+  <!-- User mini profile -->
+
+  <div *ngIf="currentUser" class="user-mini d-flex align-items-center gap-2 p-2 rounded-3"
+       style="cursor:pointer;" (click)="onLogout()" (keypress)="onLogout()" >
+    <app-avatar [initials]="userInitials" size="sm" [userId]="currentUser.id"></app-avatar>
+    <div class="sidebar-text overflow-hidden">
+      <div class="text-white fw-semibold text-truncate" style="font-size:14px;">
+        {{ currentUser?.firstName }}
+      </div>
+
+      <div style="color:#6b7a99; font-size:12px;">
+        @{{ currentUser?.username }}
+      </div>
+
+    </div>
+    <i class="bi bi-box-arrow-right sidebar-text ms-auto"
+       style="color:#6b7a99;"></i>
+  </div>
+
+  <!-- Show login if guest -->
+  <div *ngIf="!currentUser" class="p-2 text-center">
+    <button class="btn text-white fw-bold rounded-pill px-4 py-2"
+            style="background:#1d9bf0; font-size:14px;"
+            (click)="goToLogin()">
+      Log In/ Sign Up
+    </button>
+  </div>
+
+
+</nav>

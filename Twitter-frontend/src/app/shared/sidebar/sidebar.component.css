@@ -1,0 +1,50 @@
+.sidebar {
+  border-right: 1px solid #252d3d;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0d0f14;
+}
+
+.nav-item {
+  color: #a8b4cc;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: background .2s, color .2s;
+}
+
+.nav-item i { font-size: 20px; width: 24px; }
+
+.nav-item:hover { background: #1e2535; color: #fff; }
+
+.nav-item.active { color: #1d9bf0; }
+
+.tweet-btn {
+  background: #1d9bf0;
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  transition: background .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tweet-btn:hover { background: #0e71b8; }
+
+.user-mini { transition: background .2s; }
+
+.user-mini:hover { background: #1e2535; }
+
+/* Collapse text on smaller screens */
+
+@media (max-width: 1024px) {
+    
+  .sidebar-text { display: none; }
+
+  .tweet-btn { border-radius: 50% !important; width: 48px; height: 48px; padding: 0; }
+
+}

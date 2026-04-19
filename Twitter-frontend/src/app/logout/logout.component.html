@@ -1,0 +1,32 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center"
+     style="background:#0d0f14;">
+  <div class="card border-0 rounded-4 p-5 mx-3 text-center"
+       style="width:100%; max-width:380px; background:#161b24;">
+    <i class="bi bi-box-arrow-right mb-3"
+       style="font-size:48px; color:#1d9bf0;"></i>
+    <h2 class="text-white fw-bold mb-2" style="font-size:22px;">
+      Log out of Twitter?
+    </h2>
+
+    <p style="color:#6b7a99; font-size:14px;" class="mb-4">
+      You can always log back in at any time. Your tweets and data will be saved.
+    </p>
+
+    <div class="d-grid gap-3">
+      <button class="btn text-white fw-bold py-3 rounded-pill"
+              style="background:#e8ecf4; color:#0d0f14 !important;
+                     font-size:15px;"
+              (click)="confirmLogout()">
+        Log out
+      </button>
+
+      <button class="btn fw-bold py-3 rounded-pill"
+              style="background:transparent; border:1px solid #444;
+                     color:#e8ecf4; font-size:15px;"
+              (click)="cancel()">
+        Cancel
+      </button>
+
+    </div>
+  </div>
+</div>

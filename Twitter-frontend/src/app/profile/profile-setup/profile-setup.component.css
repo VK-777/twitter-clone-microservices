@@ -1,0 +1,16 @@
+.form-control,
+.form-control:focus {
+  background: #1e2535 !important;
+  border-color: #444 !important;
+  color: #e8ecf4 !important;
+  box-shadow: none !important;
+}
+
+.form-control::placeholder { color: #6b7a99 !important; }
+
+.form-control:focus { border-color: #1d9bf0 !important; }
+
+.input-group-text {
+  background: #1e2535 !important;
+  border-color: #444 !important;
+}

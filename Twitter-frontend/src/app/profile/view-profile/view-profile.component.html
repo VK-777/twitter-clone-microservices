@@ -1,0 +1,163 @@
+<div class="layout-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar-col">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Main Content -->
+  <main class="feed-col">
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color:#1d9bf0;"></div>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <!-- Back Header -->
+      <div class="feed-header d-flex align-items-center gap-3 px-3 py-3">
+        <button class="btn rounded-circle p-2"
+                style="background:transparent; color:#e8ecf4;"
+                (click)="goBack()">
+          <i class="bi bi-arrow-left" style="font-size:18px;"></i>
+        </button>
+
+        <div>
+          <div class="text-white fw-bold" style="font-size:18px;">
+            {{ profile?.firstName }}
+          </div>
+
+          <div style="color:#6b7a99; font-size:13px;">
+            {{ userTweets.length }} Tweets
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Cover Photo -->
+      <div class="position-relative">
+        <div class="cover-photo"
+             [style.backgroundImage]="coverPhotoUrl ?
+               'url(' + coverPhotoUrl + ')' : 'none'">
+        </div>
+
+        <!-- Avatar overlapping cover -->
+        <div class="position-absolute"
+             style="bottom:-48px; left:16px;">
+          <app-avatar
+            [initials]="profile?.firstName?.charAt(0) || 'U'"
+            [userId]="profile.id"
+            size="xl"
+            style="border:4px solid #0d0f14; border-radius:50%; display:block;">
+          </app-avatar>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end px-3 pt-3 pb-0 gap-2"
+           style="min-height:56px;">
+    
+        <!-- Own profile -->
+        <button *ngIf="isOwnProfile"
+                class="btn rounded-pill fw-bold px-4"
+                style="background:transparent; border:1px solid #444;
+                       color:#e8ecf4; font-size:14px;"
+                routerLink="/profile-setup">
+          Edit profile
+        </button>
+
+        <!-- Other user -->
+        <app-follow-btn *ngIf="!isOwnProfile"
+                        [userId]="profile?.id"
+                        [initialState]="profile?.isFollowing"
+                        (followChanged)="onFollowChanged($event)">
+        </app-follow-btn>
+
+      </div>
+
+      <!-- Profile Info -->
+      <div class="px-4 mt-4 mb-3">
+        <div class="text-white fw-bold" style="font-size:20px;">
+          {{ profile?.firstName }}
+        </div>
+
+        <div style="color:#6b7a99; font-size:14px; margin-bottom:10px;">
+          @{{ profile?.username || profile?.email?.split('@')[0] }}
+        </div>
+
+        <p *ngIf="profile?.bio"
+           class="text-white mb-2"
+           style="font-size:15px; line-height:1.5;">
+          {{ profile?.bio }}
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 mb-2">
+          <span *ngIf="profile?.location" style="color:#6b7a99; font-size:14px;">
+            <i class="bi bi-geo-alt me-1"></i>{{ profile.location }}
+          </span>
+
+          <a *ngIf="profile?.website"
+             [href]="profile.website" target="_blank"
+             style="color:#1d9bf0; font-size:14px; text-decoration:none;">
+            <i class="bi bi-link-45deg me-1"></i>{{ profile.website }}
+          </a>
+
+          <span style="color:#6b7a99; font-size:14px;">
+            <i class="bi bi-calendar3 me-1"></i>
+            Joined {{ profile?.createdAt | date:'MMMM yyyy' }}
+          </span>
+        </div>
+
+        <!-- Followers / Following counts -->
+        <div class="d-flex gap-4 mt-2">
+          <span style="cursor:pointer;" routerLink="/followers">
+            <span class="text-white fw-bold" style="font-size:15px;">
+              {{ followingCount || 0 }}
+            </span>
+            <span style="color:#6b7a99; font-size:14px;"> Following</span>
+          </span>
+
+          <span style="cursor:pointer;" routerLink="/followers">
+            <span class="text-white fw-bold" style="font-size:15px;">
+              {{ followerCount || 0 }}
+            </span>
+            <span style="color:#6b7a99; font-size:14px;"> Followers</span>
+          </span>
+
+        </div>
+      </div>
+
+      <!-- Tweets / Replies Tabs -->
+      <div class="d-flex" style="border-bottom:1px solid #252d3d;">
+        <div class="feed-tab flex-grow-1 text-center py-3 fw-semibold"
+             [class.active]="activeTab === 'tweets'"
+             (click)="activeTab = 'tweets'"
+             (keypress)="activeTab = 'tweets'"
+             
+             style="cursor:pointer; font-size:14px;">
+          Tweets
+        </div>
+      </div> 
+
+      <!-- User Tweets -->
+      <div *ngIf="activeTab === 'tweets'">
+        <app-tweet-card
+          *ngFor="let tweet of userTweets"
+          [tweet]="tweet">
+        </app-tweet-card>
+
+        <div class="text-center py-5" *ngIf="userTweets.length === 0">
+          <i class="bi bi-feather d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+          <p style="color:#6b7a99;">No tweets yet.</p>
+        </div>
+      </div>
+    </div> 
+  </main>
+
+
+  <!-- Right Aside -->
+  <div class="aside-col p-3">
+  </div>
+
+</div>

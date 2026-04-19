@@ -1,0 +1,121 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center px-3"
+     style="background: #0d0f14;">
+
+  <div class="p-4 p-md-5 rounded-4 w-100" style="max-width:440px; background:#161b24; border:1px solid #252d3d;">
+
+    <!-- Logo -->
+
+    <div class="text-center mb-4">
+      <h1 style="color:#1d9bf0; font-weight:700; font-size:28px;">
+        <i class="bi bi-twitter-x me-2"></i>Twitter
+      </h1>
+    </div>
+
+    <!-- Title -->
+
+    <h2 class="text-white text-center fw-bold mb-1" style="font-size:24px;">Welcome back</h2>
+    <p class="text-center mb-4" style="color:#6b7a99; font-size:14px;">Sign in to continue to your account</p>
+
+    <!-- Error -->
+
+    <div class="alert border-0 mb-3" *ngIf="errorMessage"
+         style="color:#8b0043; border-radius:10px;">
+      <i class="bi bi-exclamation-circle me-2"></i>{{ errorMessage }}
+    </div>
+
+    <!-- Form -->
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Email -->
+
+      <div class="mb-3">
+        <label for="email" class="form-label text-white-50 mb-1">Email address</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="you@example.com"
+          [class.is-invalid]="isInvalid('email')"
+          style="background:#1e2535; border-color:#252d3d; color:#e8ecf4; border-radius:10px; padding:12px 16px;"
+
+        />
+
+        <div class="invalid-feedback" *ngIf="isInvalid('email')">
+          <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+          <span *ngIf="f['email'].errors?.['pattern']">Enter a valid email (.com/.org/.in).</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+
+      <div class="mb-4">
+        <div class="d-flex justify-content-between mb-1">
+          <label for="password" class="form-label text-white-50 mb-0">Password</label>
+          <a routerLink="/forgot-password" style="color:#1d9bf0; font-size:13px; text-decoration:none;">
+            Forgot password?
+          </a>
+        </div>
+
+        <div class="input-group">
+
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control border-end-0"
+            formControlName="password"
+            placeholder="Enter your password"
+            [class.is-invalid]="isInvalid('password')"
+            style="background:#1e2535; border-color:#252d3d; color:#e8ecf4; border-radius:10px 0 0 10px; padding:12px 16px;"
+
+          />
+
+          <button class="input-group-text border-start-0"
+                style="background:#1e2535; border-color:#252d3d; border-radius:0 10px 10px 0; cursor:pointer;"
+                (click)="togglePassword()">
+            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'" style="color:#1d9bf0;"></i>
+        </button>
+          <div class="invalid-feedback" *ngIf="isInvalid('password')">
+            Password is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Button -->
+
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn fw-bold text-white py-3"
+                style="background:#1d9bf0; border-radius:50px; font-size:15px;"
+                [disabled]="isLoading">
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading">
+            <span class="spinner-border spinner-border-sm me-2"></span>Signing in…
+          </span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Divider -->
+
+    <div class="d-flex align-items-center my-3">
+      <hr class="flex-grow-1" style="border-color:#252d3d;">
+      <span class="mx-3" style="color:#6b7a99; font-size:13px;">or</span>
+      <hr class="flex-grow-1" style="border-color:#252d3d;">
+    </div>
+
+    <!-- Register link -->
+
+    <p class="text-center mb-0" style="color:#6b7a99; font-size:14px;">
+      Don't have an account?
+      <a routerLink="/register" class="ms-1 fw-semibold" style="color:#1d9bf0; text-decoration:none;">
+
+        Sign up
+
+      </a>
+
+    </p>
+
+  </div>
+
+</div>

@@ -1,0 +1,172 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center"
+     style="background:#0d0f14;">
+  <div class="card border-0 rounded-4 p-4 p-md-5 mx-3 my-4"
+       style="width:100%; max-width:520px; background:#161b24;">
+
+    <!-- Header -->
+    <h1 class="text-center fw-bold mb-1" style="color:#1d9bf0; font-size:24px;">
+      <i class="bi bi-twitter-x me-2"></i>Twitter
+    </h1>
+    <h2 class="text-white text-center fw-bold mb-1 mt-3" style="font-size:22px;">
+      Set up your profile
+    </h2>
+
+    <p class="text-center mb-4" style="color:#6b7a99; font-size:14px;">
+      Tell the world a bit about yourself
+    </p>
+
+    <!-- Step Indicator -->
+    <div class="d-flex justify-content-center gap-2 mb-4">
+      <div class="rounded-pill" style="width:32px; height:4px; background:#1d9bf0;"></div>
+      <div class="rounded-pill" style="width:32px; height:4px; background:#1d9bf0;"></div>
+      <div class="rounded-pill" style="width:32px; height:4px; background:#252d3d;"></div>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Cover Photo -->
+      <div class="mb-4">
+        <label for="coverPhoto" class="d-block mb-2 fw-semibold" style="color:#a8b4cc; font-size:13px;">
+          Cover Photo
+        </label>
+        <div class="cover-preview rounded-3 position-relative mb-2"
+             [style.backgroundImage]="coverPreview ? 'url(' + coverPreview + ')' : 'none'"
+             (click)="coverInput.click()"
+             (keypress)="coverInput.click()"
+             
+             style="height:120px; background:#1e2535; border:1px dashed #444;
+                    cursor:pointer; display:flex; align-items:center;
+                    justify-content:center; background-size:cover; background-position:center;">
+          <div *ngIf="!coverPreview" class="text-center">
+            <i class="bi bi-image d-block mb-1" style="font-size:28px; color:#6b7a99;"></i>
+            <span style="color:#6b7a99; font-size:13px;">Click to upload cover photo</span>
+          </div>
+          <div *ngIf="coverPreview"
+               class="position-absolute top-0 end-0 m-2 rounded-circle d-flex
+                      align-items-center justify-content-center"
+               style="width:28px; height:28px; background:rgba(0,0,0,.6);
+                      cursor:pointer;"
+               (click)="removeCover($event)"
+               (keypress)="removeCover($event)"
+                >
+            <i class="bi bi-x" style="color:#fff; font-size:16px;"></i>
+          </div>
+        </div>
+        <input id="coverPhoto" #coverInput type="file" accept="image/*"
+               style="display:none" (change)="onCoverSelect($event)"/>
+      </div>
+
+      <!-- Avatar -->
+      <div class="mb-4 d-flex align-items-center gap-3">
+        <div class="avatar-preview rounded-circle position-relative"
+             style="width:80px; height:80px; flex-shrink:0; cursor:pointer;
+                    background:#1e2535; border:2px dashed #444;
+                    display:flex; align-items:center; justify-content:center;
+                    overflow:hidden;"
+             (click)="avatarInput.click()"
+             (keypress)="avatarInput.click()"
+             >
+          <img *ngIf="avatarPreview" [src]="avatarPreview"
+               style="width:100%; height:100%; object-fit:cover;" alt="avatar"/>
+          <i *ngIf="!avatarPreview" class="bi bi-person-fill"
+             style="font-size:36px; color:#6b7a99;"></i>
+        </div>
+
+        <div>
+          <div class="fw-semibold text-white mb-1" style="font-size:14px;">
+            Profile Picture
+          </div>
+          <button type="button" class="btn btn-sm rounded-pill fw-semibold"
+                  style="background:transparent; border:1px solid #444;
+                         color:#e8ecf4; font-size:13px;"
+                  (click)="avatarInput.click()">
+            Upload photo
+          </button>
+        </div>
+        <input #avatarInput type="file" accept="image/*"
+               style="display:none" (change)="onAvatarSelect($event)"/>
+      </div>
+
+      <!-- Bio -->
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2">
+          <label for="bio" class="fw-semibold mb-0" style="color:#a8b4cc; font-size:13px;">
+            Bio
+          </label>
+          <span style="font-size:12px;"
+                [style.color]="bioCharsLeft < 20 ? '#f91880' : '#6b7a99'">
+            {{ bioCharsLeft }} remaining
+          </span>
+        </div>
+
+        <textarea
+          id="bio"
+          class="form-control"
+          formControlName="bio"
+          placeholder="Tell people about yourself..."
+          rows="3"
+          maxlength="160"
+          (input)="onBioInput()"
+          style="resize:none;"
+        ></textarea>
+      </div>
+
+      <!-- Location -->
+      <div class="mb-3">
+        <label for="location" class="d-block mb-2 fw-semibold" style="color:#a8b4cc; font-size:13px;">
+          Location
+        </label>
+        <div class="input-group">
+          <span class="input-group-text"
+                style="border-color:#444; color:#6b7a99;">
+            <i class="bi bi-geo-alt"></i>
+          </span>
+
+          <input id="location" type="text" class="form-control"
+                 formControlName="location"
+                 placeholder="Where are you based?"/>
+        </div>
+      </div>
+
+      <!-- Website -->
+      <div class="mb-4">
+        <label for="website" class="d-block mb-2 fw-semibold" style="color:#a8b4cc; font-size:13px;">
+          Website
+        </label>
+        <div class="input-group">
+          <span class="input-group-text"
+                style="border-color:#444; color:#6b7a99;">
+
+            <i class="bi bi-link-45deg"></i>
+          </span>
+
+          <input id="website" type="url" class="form-control"
+                 formControlName="website"
+                 placeholder="https://yourwebsite.com"/>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-grid gap-2">
+        <button type="submit"
+                class="btn text-white fw-bold py-3 rounded-pill"
+                style="background:#1d9bf0; font-size:15px;"
+                [disabled]="isLoading">
+          <span *ngIf="!isLoading">Save Profile</span>
+          <span *ngIf="isLoading">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Saving…
+          </span>
+        </button>
+
+        <button type="button"
+                class="btn fw-semibold py-2 rounded-pill"
+                style="background:transparent; border:1px solid #444;
+                       color:#a8b4cc; font-size:14px;"
+                (click)="skip()">
+          Skip for now
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

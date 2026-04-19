@@ -1,0 +1,172 @@
+<div class="layout-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar-col">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Main Content -->
+  <main class="feed-col">
+
+    <!-- Header -->
+    <div class="feed-header px-3 py-3">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <button class="btn rounded-circle p-2"
+                style="background:transparent; color:#e8ecf4;"
+                (click)="goBack()">
+          <i class="bi bi-arrow-left" style="font-size:18px;"></i>
+        </button>
+
+        <div>
+          <div class="text-white fw-bold" style="font-size:18px;">
+            {{ currentUser?.firstName }}
+          </div>
+          <div style="color:#6b7a99; font-size:13px;">
+            @{{ currentUser?.username || 'user' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="d-flex" style="border-bottom:1px solid #252d3d;">
+        <div class="feed-tab flex-grow-1 text-center py-2 fw-semibold"
+             [class.active]="activeTab === 'followers'"
+             (click)="switchTab('followers')"
+             (keypress)="switchTab('followers')"
+              
+             style="cursor:pointer; font-size:14px;">
+          Followers
+        </div>
+
+        <div class="feed-tab flex-grow-1 text-center py-2 fw-semibold"
+             [class.active]="activeTab === 'following'"
+             (click)="switchTab('following')"
+             (keypress)="switchTab('following')"
+              
+             style="cursor:pointer; font-size:14px;">
+          Following
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color:#1d9bf0;"></div>
+    </div>
+
+    <!-- Followers List -->
+    <div *ngIf="activeTab === 'followers' && !isLoading">
+      <div class="text-center py-5" *ngIf="followers.length === 0">
+        <i class="bi bi-people d-block mb-2"
+           style="font-size:40px; color:#6b7a99;"></i>
+        <p class="text-white fw-bold mb-1" style="font-size:18px;">
+          No followers yet
+        </p>
+        <p style="color:#6b7a99; font-size:14px;">
+          When someone follows you, they'll show up here.
+        </p>
+      </div>
+
+      <div class="user-item d-flex align-items-start gap-3 px-4 py-3"
+           *ngFor="let user of followers"
+           [routerLink]="['/profile', user.id]"
+           style="cursor:pointer;">
+        <app-avatar [initials]="user.firstName.charAt(0)"
+                    [src]="user.profilePicture || null"
+                    size="md">
+        </app-avatar>
+
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-white fw-bold" style="font-size:15px;">
+                {{ user.firstName }}
+              </div>
+
+              <div style="color:#6b7a99; font-size:13px;">
+                @{{ user.username || user.email?.split('@')[0] }}
+              </div>
+
+            </div>
+
+            <app-follow-btn [userId]="user.id"
+                            [initialState]="user.isFollowing || false"
+                            (click)="$event.stopPropagation()"
+                            (keypress)="$event.stopPropagation()"
+                              >
+            </app-follow-btn>
+
+          </div>
+
+          <p *ngIf="user.bio"
+             style="color:#a8b4cc; font-size:13px; margin-top:4px; margin-bottom:0;">
+            {{ user.bio }}
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Following List -->
+    <div *ngIf="activeTab === 'following' && !isLoading">
+      <div class="text-center py-5" *ngIf="following.length === 0">
+        <i class="bi bi-person-plus d-block mb-2"
+           style="font-size:40px; color:#6b7a99;"></i>
+        <p class="text-white fw-bold mb-1" style="font-size:18px;">
+          Not following anyone yet
+        </p>
+
+        <p style="color:#6b7a99; font-size:14px;">
+          Follow people to see their tweets in your feed.
+        </p>
+
+        <button class="btn rounded-pill fw-bold px-4 mt-2"
+                style="background:#1d9bf0; color:#fff;"
+                routerLink="/search">
+          Find people to follow
+        </button>
+      </div>
+
+      <div class="user-item d-flex align-items-start gap-3 px-4 py-3"
+           *ngFor="let user of following"
+           [routerLink]="['/profile', user.id]"
+           style="cursor:pointer;">
+
+        <app-avatar [initials]="user.firstName.charAt(0)"
+                    [src]="user.profilePicture || null"
+                    size="md">
+        </app-avatar>
+
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-white fw-bold" style="font-size:15px;">
+                {{ user.firstName }}
+              </div>
+
+              <div style="color:#6b7a99; font-size:13px;">
+                @{{ user.username || user.email?.split('@')[0] }}
+              </div>
+            </div>
+
+            <app-follow-btn [userId]="user.id"
+                            [initialState]="true"
+                            (click)="$event.stopPropagation()"
+                            (keypress)="$event.stopPropagation()"
+                              >               
+            </app-follow-btn>
+
+          </div>
+          <p *ngIf="user.bio"
+             style="color:#a8b4cc; font-size:13px; margin-top:4px; margin-bottom:0;">
+            {{ user.bio }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right Aside -->
+  <div class="aside-col p-3">
+  </div>
+</div>

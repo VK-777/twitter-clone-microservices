@@ -1,0 +1,87 @@
+<div class="tweet-card p-3" (click)="onCardClick()" (keypress)="onCardClick()" >
+  <div class="d-flex gap-3">
+    <!-- Avatar -->
+    <app-avatar
+      [initials]="tweet.author.firstName.charAt(0)"
+      [userId]="tweet.author.id"
+      size="md"
+      (click)="onAuthorClick($event)"
+      (keypress)="onAuthorClick($event)"
+      
+      style="cursor:pointer; flex-shrink:0;"
+    ></app-avatar>
+    <div class="flex-grow-1 min-width-0">
+
+      <!-- Header -->
+
+      <div class="d-flex align-items-center flex-wrap gap-1 mb-1">
+        <span class="fw-bold text-white"
+              style="font-size:15px; cursor:pointer;"
+              (click)="onAuthorClick($event)"
+              (keypress)="onAuthorClick($event)"
+              
+              (keypress)="onAuthorClick($event)"
+              >
+          {{ tweet.author.firstName }}
+        </span>
+        <span style="color:#6b7a99; font-size:14px;">
+          @{{ tweet.author.username }}
+        </span>
+        <span style="color:#6b7a99; font-size:14px;">·</span>
+        <span style="color:#6b7a99; font-size:13px;">
+          {{ tweet.createdAt | date:'shortTime' }}
+        </span>
+      </div>
+
+      <!-- Content -->
+
+      <div class="mb-2 text-white"
+           style="font-size:15px; line-height:1.5; word-break:break-word;"
+           [innerHTML]="formattedContent">
+      </div>
+
+      <!-- Media -->
+      <img *ngIf="tweet.mediaUrl"
+           [src]="tweet.mediaUrl"
+           class="rounded-3 mb-2 w-100"
+           style="max-width: 100%; max-height:300px; object-fit:contain; margin-left:0;"
+           (click)="$event.stopPropagation()"
+           (keypress)="$event.stopPropagation()"
+           
+           alt="media"/>
+
+      <!-- Actions -->
+
+      <div class="d-flex gap-4 mt-1">
+
+        <!-- Reply -->
+        <button class="action-btn" (click)="onCardClick(); $event.stopPropagation()">
+          <i class="bi bi-chat"></i>
+          <span>{{ tweet.repliesCount }}</span>
+        </button>
+
+        <!-- Retweet -->
+        <button class="action-btn"
+                [style.color]="tweet.retweeted ? '#00ba7c' : '#6b7a99'"
+                (click)="onRetweet($event)">
+          <i class="bi bi-repeat"></i>
+          <span>{{ tweet.retweetsCount }}</span>
+        </button>
+
+        <!-- Like -->
+        <button class="action-btn"
+                [style.color]="tweet.liked ? '#f91880' : '#6b7a99'"
+                (click)="onLike($event)">
+          <i [class]="tweet.liked ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+          <span>{{ tweet.likesCount }}</span>
+        </button>
+
+        <!-- Views -->
+        <button class="action-btn" (click)="$event.stopPropagation()">
+          <i class="bi bi-bar-chart"></i>
+
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

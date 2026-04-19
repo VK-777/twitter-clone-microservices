@@ -1,0 +1,173 @@
+<div class="layout-wrapper" style="background:#0d0f14; min-height:100vh;">
+
+  <!-- Sidebar -->
+
+  <div class="sidebar-col">
+    <app-sidebar (tweetClicked)="focusComposer()"></app-sidebar>
+  </div>
+
+  <!-- Main Feed -->
+  <main class="feed-col">
+
+    <!-- Feed Header -->
+    <div class="feed-header d-flex align-items-center px-3 py-3">
+      <span class="fw-bold text-white" style="font-size:20px;">Home</span>
+      <i class="bi bi-stars ms-auto" style="color:#1d9bf0; font-size:20px; cursor:pointer;"></i>
+    </div>
+
+    <!-- Tweet Composer -->
+    <div class="p-3 d-flex gap-3" *ngIf="currentUser" style="border-bottom:1px solid #252d3d;">
+      <app-avatar [initials]="userInitials" [userId]="currentUser.id" size="md"></app-avatar>
+      <div class="flex-grow-1">
+        <textarea
+          #composerRef
+          [(ngModel)]="tweetContent"
+          (input)="onInput()"
+          placeholder="What's happening?"
+          maxlength="280"
+          rows="2"
+          class="composer-textarea w-100 mb-2"
+        ></textarea>
+
+        <!-- Media preview -->
+        <div class="position-relative d-inline-block mb-2" *ngIf="mediaPreviewUrl">
+          <img [src]="mediaPreviewUrl"
+               class="rounded-3"
+               style="max-width:200px; max-height:150px; object-fit:cover;"
+               alt="preview"/>
+          <button class="btn btn-sm position-absolute top-0 end-0"
+                  style="background:rgba(0,0,0,.6); color:#fff; border-radius:50%; width:26px; height:26px; padding:0; font-size:14px;"
+                  (click)="removeMedia()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="d-flex align-items-center justify-content-between"
+             style="border-top:1px solid #252d3d; padding-top:10px; overflow: visible;">
+          <div class="d-flex gap-1" style="overflow: visible;">
+            <button class="icon-action-btn" (click)="mediaInput.click()" title="Image">
+              <i class="bi bi-image"></i>
+            </button>
+            <button class="icon-action-btn" title="GIF">
+              <i class="bi bi-filetype-gif"></i>
+            </button>
+
+            <div style="position: relative; display: inline-block;">
+              <button class="icon-action-btn" title="Emoji" (click)="showEmojiPicker = !showEmojiPicker"
+                style="cursor: pointer; font-size: 20px; color: #1d9bf0;">
+                <i class="bi bi-emoji-smile" ></i>
+              </button>
+              <div *ngIf="showEmojiPicker" style="position: absolute;bottom: 30px; background: #1e2732; border: 1px solid #333; border-radius: 12px; padding: 8px; display: flex; gap:8px;z-index: 100;">
+                  <span *ngFor="let emoji of emojis"
+                  (click)="addEmoji(emoji)" (keypress)="addEmoji(emoji)"
+                  style="font-size: 22px; cursor: pointer;">{{emoji}}</span>
+                </div>
+              </div>
+
+            <input #mediaInput type="file" accept="image/*,video/*"
+                   style="display:none" (change)="onMediaSelect($event)"/>
+          </div>
+
+          <div class="d-flex align-items-center gap-3">
+            <span class="fw-semibold"
+                  [style.color]="charsLeft < 20 ? '#f91880' : charsLeft < 60 ? '#ffd700' : '#6b7a99'"
+                  style="font-size:13px;">
+              {{ charsLeft }}
+            </span>
+
+            <button class="btn text-white fw-bold rounded-pill px-4 py-2"
+                    style="background:#1d9bf0; font-size:14px;"
+                    (click)="postTweet()"
+                    [disabled]="!tweetContent.trim() || charsLeft < 0 || isPosting">
+              <span *ngIf="!isPosting">Tweet</span>
+              <span *ngIf="isPosting">
+                <span class="spinner-border spinner-border-sm"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feed Tabs -->
+    <div class="d-flex" style="border-bottom:1px solid #252d3d;">
+      <div class="feed-tab flex-grow-1 text-center py-3 fw-semibold"
+           [class.active]="activeTab === 'for-you'"
+           (click)="activeTab = 'for-you'"
+           (keypress)="activeTab = 'for-you'"
+           
+           style="cursor:pointer; font-size:14px;">
+        For you
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color:#1d9bf0;"></div>
+    </div>
+
+    <!-- Tweet Feed -->
+
+    <div *ngIf="!isLoading">
+      <app-tweet-card
+        *ngFor="let tweet of tweets"
+        [tweet]="tweet">
+      </app-tweet-card>
+
+      <div class="text-center py-5" *ngIf="tweets.length === 0">
+        <i class="bi bi-feather d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+        <p style="color:#6b7a99;">No tweets yet. Be the first to post!</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Right Aside -->
+  <div class="aside-col p-3">
+
+    <!-- Search -->
+    <div class="position-relative mb-3" routerLink="/search" style="cursor:pointer;">
+      <i class="bi bi-search position-absolute"
+         style="left:14px; top:50%; transform:translateY(-50%); color:#6b7a99; font-size:14px;"></i>
+      <input type="text" class="form-control rounded-pill ps-5"
+             placeholder="Search Twitter" readonly
+             style="border-color:#252d3d; color:#6b7a99; cursor:pointer;"/>
+    </div>
+
+    <!-- Trends -->
+    <div class="rounded-3 mb-3" style="background:#161b24; border:1px solid #252d3d;">
+      <div class="px-3 pt-3 pb-2 fw-bold text-white" style="font-size:18px;">
+        Trends for you
+      </div>
+      <div class="trend-item px-3 py-2" *ngFor="let trend of trends">
+      <div class="text-white fw-bold" style="font-size: 16px;" (click)="onTrendClick(trend)" (keypress)="onTrendClick(trend)" >#{{ trend }}</div>
+      </div>
+    </div>
+
+    <!-- Who to follow -->
+    <div *ngIf="currentUser" class="rounded-3" style="background:#161b24; border:1px solid #252d3d;">
+      <div class="px-3 pt-3 pb-2 fw-bold text-white" style="font-size:18px;">
+        Who to follow
+      </div>
+
+      <div class="d-flex align-items-center gap-2 px-3 py-2 who-item"
+           *ngFor="let u of suggestions" 
+           (click)="goToProfile(u.id)"
+           (keypress)="goToProfile(u.id)"
+           >
+        <app-avatar [initials]="u.firstName.charAt(0)" [userId]="u.id" size="sm"></app-avatar>
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="text-white fw-semibold text-truncate" style="font-size:14px;">
+            {{ u.firstName }}
+          </div>
+          <div style="color:#6b7a99; font-size:13px;">@{{ u.username }}</div>
+        </div>
+
+        <app-follow-btn [userId]="u.id" [initialState]="u.isFollowing || false">
+        </app-follow-btn>
+
+      </div>
+    </div>
+  </div>
+</div>

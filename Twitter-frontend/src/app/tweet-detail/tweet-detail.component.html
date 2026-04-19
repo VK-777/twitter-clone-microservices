@@ -1,0 +1,194 @@
+<div class="layout-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar-col">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Main Content -->
+  <main class="feed-col">
+
+    <!-- Header -->
+    <div class="feed-header d-flex align-items-center gap-3 px-3 py-3">
+      <button class="btn rounded-circle p-2"
+              style="background:transparent; color:#e8ecf4;"
+              (click)="goBack()">
+        <i class="bi bi-arrow-left" style="font-size:18px;"></i>
+      </button>
+      <span class="text-white fw-bold" style="font-size:20px;">Tweet</span>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color:#1d9bf0;"></div>
+    </div>
+
+    <div *ngIf="!isLoading && tweet">
+
+      <!-- Main Tweet -->
+      <div class="px-4 pt-3 pb-2" style="border-bottom:1px solid #252d3d;">
+
+        <!-- Author -->
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <app-avatar
+            [initials]="tweet.author.firstName.charAt(0)"
+            [userId]="tweet.author.id"
+            size="md"
+            [routerLink]="['/profile', tweet.author.id]"
+            style="cursor:pointer;">
+          </app-avatar>
+
+          <div class="flex-grow-1">
+            <div class="text-white fw-bold" style="font-size:15px;">
+              {{ tweet.author.firstName }}
+            </div>
+
+            <div style="color:#6b7a99; font-size:14px;">
+              @{{ tweet.author.username }}
+            </div>
+
+          </div>
+          <app-follow-btn *ngIf="!isOwnTweet"
+                          [userId]="tweet.author.id"
+                          [initialState]="tweet.author.isFollowing || false">
+          </app-follow-btn>
+        </div>
+
+        <!-- Content -->
+        <p class="text-white mb-3"
+           style="font-size:20px; line-height:1.6; word-break:break-word;"
+           [innerHTML]="formattedContent">
+        </p>
+
+        <!-- Media -->
+        <img *ngIf="tweet.mediaUrl"
+             [src]="tweet.mediaUrl"
+             class="rounded-3 w-100 mb-3"
+             style="max-width: 100%; max-height:300px; object-fit:contain; margin-left:0;"
+             alt="media"/>
+
+        <!-- Timestamp -->
+        <div style="color:#6b7a99; font-size:14px; border-bottom:1px solid #252d3d;"
+             class="pb-3 mb-3">
+          {{ tweet.createdAt | date:'h:mm a · MMM d, y' }}
+        </div>
+
+        <!-- Stats -->
+        <div class="d-flex gap-4 pb-3 mb-2"
+             style="border-bottom:1px solid #252d3d;">
+          <span style="font-size:14px;">
+            <span class="text-white fw-bold">{{ tweet.retweetsCount }}</span>
+            <span style="color:#6b7a99;"> Retweets</span>
+          </span>
+
+          <span style="font-size:14px;">
+            <span class="text-white fw-bold">{{ tweet.likesCount }}</span>
+            <span style="color:#6b7a99;"> Likes</span>
+          </span>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-around pb-2"
+             style="border-bottom:1px solid #252d3d;">
+          <button class="action-btn">
+            <i class="bi bi-chat" style="font-size:20px;"></i>
+          </button>
+
+          <button class="action-btn"
+                  [style.color]="tweet.retweeted ? '#00ba7c' : '#6b7a99'"
+                  (click)="onRetweet($event)">
+            <i class="bi bi-repeat" style="font-size:20px;"></i>
+          </button>
+
+          <button class="action-btn"
+                  [style.color]="tweet.liked ? '#f91880' : '#6b7a99'"
+                  (click)="onLike()">
+            <i [class]="tweet.liked ? 'bi bi-heart-fill' : 'bi bi-heart'"
+               style="font-size:20px;"></i>
+          </button>
+
+          <button class="action-btn">
+            <i *ngIf="isOwnTweet && !isEditing" class="bi bi-pencil-fill"
+            (click)="startEdit()" (keypress)="startEdit()"
+            style="cursor: pointer; color: #6b7a99;"></i>
+            <i *ngIf="!isOwnTweet" class="bi bi-bar-chart" style="font-size:20px;"></i>
+          </button>
+          <button class="action-btn" *ngIf="isOwnTweet"
+                  (click)="onDelete()"
+                  style="color:#f91880 !important;">
+            <i class="bi bi-trash" style="font-size:20px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isEditing">
+            <textarea [(ngModel)]="editContent" style="width:100%;color:white;background-color: #333; border:1px solid #333; border-radius: 8px; padding:8px;"></textarea>
+            <button (click)="saveEdit()" style="color: #1d9bf0; background: none; border: none; cursor: pointer;">Save</button>
+            <button (click)="cancelEdit()" style="color: #6b7a99; background: none; border: none; cursor: pointer;">Cancel</button>
+      </div>
+
+      <!-- Reply Composer -->
+      <div *ngIf="currentUser" class="d-flex gap-3 px-4 py-3"
+           style="border-bottom:1px solid #252d3d;">
+        <app-avatar [initials]="userInitials" [userId]="currentUser.id" size="md"></app-avatar>
+        <div class="flex-grow-1">
+          <textarea
+            [(ngModel)]="replyContent"
+            placeholder="Post your reply"
+            rows="2"
+            maxlength="280"
+            class="composer-textarea w-100 mb-2">
+          </textarea>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span style="color:#6b7a99; font-size:13px;">
+              {{ 280 - replyContent.length }} remaining
+            </span>
+
+            <button class="btn text-white fw-bold rounded-pill px-4 py-2"
+                    style="background:#1d9bf0; font-size:14px;"
+                    (click)="postReply()"
+                    [disabled]="!replyContent.trim() || isReplying">
+              <span *ngIf="!isReplying">Reply</span>
+              <span *ngIf="isReplying">
+                <span class="spinner-border spinner-border-sm"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Replies -->
+      <div>
+        <app-tweet-card
+          *ngFor="let reply of replies"
+          [tweet]="reply">
+        </app-tweet-card>
+
+        <div class="text-center py-4" *ngIf="replies.length === 0">
+          <p style="color:#6b7a99; font-size:14px;">
+            No replies yet. Be the first to reply!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tweet not found -->
+    <div class="text-center py-5" *ngIf="!isLoading && !tweet">
+      <i class="bi bi-exclamation-circle d-block mb-2"
+         style="font-size:40px; color:#6b7a99;"></i>
+      <p class="text-white fw-bold">Tweet not found</p>
+      <button class="btn rounded-pill fw-bold px-4"
+              style="background:#1d9bf0; color:#fff;"
+              routerLink="/timeline">
+        Go Home
+      </button>
+
+    </div>
+  </main>
+
+  <!-- Right Aside -->
+  <div class="aside-col p-3">
+  </div>
+</div>

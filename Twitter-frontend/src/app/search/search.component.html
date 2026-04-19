@@ -1,0 +1,172 @@
+<div class="layout-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar-col">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Main Content -->
+  <main class="feed-col">
+
+    <!-- Sticky Search Header -->
+    <div class="feed-header px-3 py-2">
+      <div class="position-relative">
+        <i class="bi bi-search position-absolute"
+           style="left:14px; top:50%; transform:translateY(-50%);
+                  color:#6b7a99; font-size:15px; z-index:1;"></i>
+        <input
+          type="text"
+          class="form-control rounded-pill ps-5 py-2"
+          placeholder="Search Twitter"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch($event)"
+        />
+
+        <button class="btn position-absolute"
+                style="right:8px; top:50%; transform:translateY(-50%);
+                       color:#6b7a99; padding:4px 8px;"
+                *ngIf="searchQuery"
+                (click)="clearSearch()">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="d-flex mt-2" style="border-bottom:1px solid #252d3d;">
+        <div class="feed-tab flex-grow-1 text-center py-2 fw-semibold"
+             [class.active]="activeTab === 'people'"
+             (click)="setActiveTab('people')"
+             (keypress)="setActiveTab('people')"
+             
+             style="cursor:pointer; font-size:14px;">
+          People
+        </div>
+
+        <div class="feed-tab flex-grow-1 text-center py-2 fw-semibold"
+             [class.active]="activeTab === 'tweets'"
+             (click)="setActiveTab('tweets')"
+             (keypress)="setActiveTab('tweets')"
+             
+             style="cursor:pointer; font-size:14px;">
+          Tweets
+        </div>
+
+        <div class="feed-tab flex-grow-1 text-center py-2 fw-semibold"
+             [class.active]="activeTab === 'trends'"
+             (click)="setActiveTab('trends')"
+             (keypress)="setActiveTab('trends')"
+             
+             style="cursor:pointer; font-size:14px;">
+          Trends
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color:#1d9bf0;"></div>
+    </div>
+
+    <!-- People Tab -->
+    <div *ngIf="activeTab === 'people' && !isLoading">
+      <div class="text-center py-5" *ngIf="!searchQuery">
+        <i class="bi bi-people d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+        <p style="color:#6b7a99;">Search for people by name or username</p>
+      </div>
+
+      <div class="text-center py-5"
+           *ngIf="searchQuery && userResults.length === 0">
+        <i class="bi bi-person-x d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+        <p style="color:#6b7a99;">No users found for "{{ searchQuery }}"</p>
+      </div>
+
+      <div class="user-item d-flex align-items-center gap-3 px-4 py-3"
+           *ngFor="let user of userResults"
+           [routerLink]="['/profile', user.id]"
+           style="cursor:pointer;">
+        <app-avatar [initials]="user.firstName.charAt(0)"
+                    [userId]="user.id"
+                    size="md">
+        </app-avatar>
+
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="text-white fw-bold text-truncate" style="font-size:15px;">
+            {{ user.firstName }}
+          </div>
+          <div style="color:#6b7a99; font-size:13px;">@{{ user.email?.split('@')[0]}}</div>
+          <div style="color:#a8b4cc; font-size:13px;" *ngIf="user.bio">
+            {{ user.bio }}
+          </div>
+        </div>
+
+        <app-follow-btn [userId]="user.id"
+                        [initialState]="user.isFollowing || false">
+        </app-follow-btn>
+
+      </div>
+
+    </div>
+
+    <!-- Tweets Tab -->
+    <div *ngIf="activeTab === 'tweets' && !isLoading">
+      <div class="text-center py-5" *ngIf="!searchQuery">
+        <i class="bi bi-hash d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+        <p style="color:#6b7a99;">Search for tweets, hashtags or keywords</p>
+      </div>
+
+      <div class="text-center py-5"
+           *ngIf="searchQuery && tweetResults.length === 0">
+        <i class="bi bi-chat-x d-block mb-2" style="font-size:40px; color:#6b7a99;"></i>
+        <p style="color:#6b7a99;">No tweets found for "{{ searchQuery }}"</p>
+      </div>
+
+      <app-tweet-card
+        *ngFor="let tweet of tweetResults"
+        [tweet]="tweet">
+      </app-tweet-card>
+    </div>
+
+    <!-- Trends Tab -->
+    <div *ngIf="activeTab === 'trends' && !isLoading">
+      <div class="trend-item px-4 py-3"
+           *ngFor="let trend of trends"
+           style="cursor:pointer; border-bottom:1px solid #252d3d;">
+        <div *ngIf="searchQuery.trim() else showTrends">
+          <div *ngFor="let tweet of tweetResults" (click)="router.navigate(['/tweet', tweet.id])" 
+          (keypress)="router.navigate(['/tweet', tweet.id])" 
+          style="cursor:pointer; position:relative">
+          <div style="position: absolute; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100%; 
+                z-index: 10;"></div>
+            <app-tweet-card [tweet]="tweet" class="d-block w-100" ></app-tweet-card>
+          </div>
+        </div>
+      </div>
+      <ng-template #showTrends>
+        <div *ngFor="let trend of trends" class="text-white fw-bold" style="font-size: 16px;"
+        (click)="onTrendClick(trend)" (keypress)="onTrendClick(trend)"
+             >#{{ trend }}</div>
+      </ng-template>
+    </div>
+  </main>
+
+  <!-- Right Aside -->
+  <div class="aside-col p-3">
+    <div class="rounded-3" style="background:#161b24; border:1px solid #252d3d;">
+      <div class="px-3 pt-3 pb-2 fw-bold text-white" style="font-size:18px;">
+        Trends for you
+      </div>
+      <div class="trend-item px-3 py-2"
+           *ngFor="let trend of trends"
+           style="border-top:1px solid #252d3d; cursor:pointer;">
+        <div class="text-white fw-bold" style="font-size: 16px;" (click)="onTrendClick(trend)"
+        (keypress)="onTrendClick(trend)" >#{{ trend }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

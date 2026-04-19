@@ -1,0 +1,64 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: GatewayMs
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery: 
+       register: true
+       prefer-ip-address: true
+       instance-id: ${spring.application.name}:${server.port}
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            corsConfigurations:
+              '[/**]':
+                allowedOrigins: "http://localhost:4200"
+                allowedMethods: "*"
+                allowedHeaders: "*"
+                allowCredentials: true
+          routes:
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - AuthenticationFilter	
+            - id: tweet-service
+              uri: lb://tweet-service
+              predicates:
+                - Path=/api/v1/tweets/**
+              filters:
+                - AuthenticationFilter
+            - id: following-service
+              uri: lb://followers-service
+              predicates:
+                - Path=/api/v1/follow/**
+              filters:
+                - AuthenticationFilter				
+            - id: search-service
+              uri: lb://search-service
+              predicates:
+                - Path=/api/v1/search/**
+              filters:
+                - AuthenticationFilter
+            - id: media-service
+              uri: lb://media-service
+              predicates:
+                - Path=/api/v1/media/**
+              filters:
+                - AuthenticationFilter
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+jwt:
+  secret: "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437"
